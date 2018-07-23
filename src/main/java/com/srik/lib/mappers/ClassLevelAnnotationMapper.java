@@ -6,6 +6,8 @@ import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.Set;
 
+import static com.srik.lib.utils.Util.isEmpty;
+
 public class ClassLevelAnnotationMapper {
 
 
@@ -29,7 +31,7 @@ public class ClassLevelAnnotationMapper {
 
                 Annotation annotation = classObj.getAnnotation(annotationType);
 
-                if(annotation != null) reflectedClassesForClassLevelAnnotations.put(((PATH) annotation).value(), classObj);
+                if(!isEmpty(annotation)) reflectedClassesForClassLevelAnnotations.put(((PATH) annotation).value(), classObj);
 
             } catch (Exception e) {
 

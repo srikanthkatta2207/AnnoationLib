@@ -7,6 +7,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 
+import static com.srik.lib.utils.Util.isEmpty;
+
 public class Handler {
 
     private static HashMap<String, Class> reflectedClassesMap;
@@ -20,10 +22,7 @@ public class Handler {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
     }
-
 
     public static <T extends Annotation> Object send(String url, String method,HashMap<String,String> queryParams) throws Exception {
 
@@ -34,7 +33,6 @@ public class Handler {
         return call(reflectedClass, annotationClass,queryParams);
     }
 
-
     private static <T, E extends Annotation> T call(Class<T> reflectedClass, Class<E> annotationClass, HashMap<String, String> queryParams) {
 
         try {
@@ -42,15 +40,13 @@ public class Handler {
 
             Method[] methods = reflectedClass.getMethods();
 
-            Object[] args = null;
-
             for (Method method : methods) {
 
                 Annotation annotation = method.getAnnotation(annotationClass);
 
-                if (annotation != null) {
+                if (!isEmpty(annotation)) {
 
-                    args = getArgsForInvokeMethod(method,queryParams);
+                    Object[] args = getArgsForInvokeMethod(method,queryParams);
 
                     return (T) method.invoke(object,args);
                 }
@@ -62,14 +58,13 @@ public class Handler {
         return null;
     }
 
-
     private static Object[] getArgsForInvokeMethod(Method method,HashMap<String,String> queryParams) {
 
         Annotation[][] paramAnnotations = method.getParameterAnnotations();
 
         Object[] args = new Object[paramAnnotations.length];
 
-        if(paramAnnotations.length != 0) {
+        if(!isEmpty(paramAnnotations)) {
 
             int index=0;
 
@@ -83,7 +78,5 @@ public class Handler {
 
         return args;
     }
-
-
 }
 
